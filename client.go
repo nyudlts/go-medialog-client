@@ -93,3 +93,23 @@ func getCreds(environment string, configBytes []byte) (MedialogCreds, error) {
 
 	return MedialogCreds{}, fmt.Errorf("Credentials file did not contain %s\n", environment)
 }
+
+func (mlc *MedialogClient) Get(url string) (*http.Response, error) {
+
+	req, err := http.NewRequest("GET", mlc.RootURL+url, nil)
+	if err != nil {
+		return nil, err
+	}
+	req.Header.Add("X-Medialog-Token", mlc.SessionToken)
+
+	resp, err := mlc.Client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+
+	if resp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("failed to get %s: %s", url, resp.Status)
+	}
+
+	return resp, nil
+}
