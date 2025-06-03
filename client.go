@@ -107,9 +107,5 @@ func (mlc *MedialogClient) Get(url string) (*http.Response, error) {
 		return nil, err
 	}
 
-	if resp.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("failed to get %s: %s", url, resp.Status)
-	}
-
 	return resp, nil
 }

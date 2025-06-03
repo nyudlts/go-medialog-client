@@ -21,8 +21,10 @@ func main() {
 		panic(err)
 	}
 
-	for i, entryID := range entryIDs {
-		fmt.Println(i, entryID)
+	entry, err := mlClient.GetEntry(entryIDs[0])
+	if err != nil {
+		panic(err)
 	}
+	fmt.Println(entry)
 
 }
