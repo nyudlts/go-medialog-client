@@ -1,8 +1,10 @@
 package main
 
 import (
-	medialog_client "medialog-client"
+	"fmt"
 	"os"
+
+	medialog_client "medialog-client"
 )
 
 func main() {
@@ -14,8 +16,13 @@ func main() {
 		panic(err)
 	}
 
-	if err := mlClient.GetEntries(); err != nil {
+	entryIDs, err := mlClient.GetEntryIDs()
+	if err != nil {
 		panic(err)
+	}
+
+	for i, entryID := range entryIDs {
+		fmt.Println(i, entryID)
 	}
 
 }

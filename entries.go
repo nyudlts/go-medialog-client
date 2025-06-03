@@ -1,36 +1,38 @@
 package medialog_client
 
 import (
+	"encoding/json"
 	"fmt"
-	"io"
 	"net/http"
+
+	"github.com/google/uuid"
 )
 
-func (c *MedialogClient) GetEntries() error {
+func (c *MedialogClient) GetEntryIDs() ([]uuid.UUID, error) {
 
-	url := c.RootURL + "/entries"
+	entryIDS := []uuid.UUID{}
+
+	url := c.RootURL + "/entries?all_ids=true"
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	req.Header.Add("X-Medialog-Token", c.SessionToken)
 
 	resp, err := c.Client.Do(req)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		return fmt.Errorf("failed to get entries: %s", resp.Status)
+		return nil, fmt.Errorf("failed to get entries: %s", resp.Status)
 	}
 
-	body, err := io.ReadAll(resp.Body)
-	if err != nil {
-		return err
+	if err := json.NewDecoder(resp.Body).Decode(&entryIDS); err != nil {
+		return nil, err
 	}
 
-	fmt.Println("Response Body:", string(body))
-	return nil
+	return entryIDS, nil
 }
