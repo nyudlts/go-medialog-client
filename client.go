@@ -109,3 +109,18 @@ func (mlc *MedialogClient) Get(url string) (*http.Response, error) {
 
 	return resp, nil
 }
+
+func (mlc *MedialogClient) Post(url string, body io.Reader) (*http.Response, error) {
+	req, err := http.NewRequest("POST", mlc.RootURL+url, body)
+	if err != nil {
+		return nil, err
+	}
+	req.Header.Add("X-Medialog-Token", mlc.SessionToken)
+
+	resp, err := mlc.Client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+
+	return resp, nil
+}

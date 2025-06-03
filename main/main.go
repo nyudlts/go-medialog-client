@@ -21,10 +21,28 @@ func main() {
 		panic(err)
 	}
 
-	entry, err := mlClient.GetEntry(entryIDs[0])
+	entryID := entryIDs[0]
+	entry, err := mlClient.GetEntry(entryID)
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(entry)
+
+	fmt.Println(entry.RepositoryID)
+
+	entry.ImagedBy = "Donald M."
+
+	msg, err := mlClient.UpdateEntry(entry.ID, entry)
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(msg)
+
+	entry2, err := mlClient.GetEntry(entry.ID)
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(entry2.ImagedBy)
 
 }
